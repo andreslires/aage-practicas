@@ -130,78 +130,147 @@ En esta sección se llevará a cabo un análisis exploratorio de los datos para 
  del dataset y la relación entre las variables. Se utilizarán técnicas de visualización y estadísticas descriptivas 
  para identificar patrones, tendencias y posibles problemas en los datos.
 
-\begin{table}
-\caption{Table captions should be placed above the
-tables.}\label{tab1}
-\begin{tabular}{|l|l|l|}
+El análisis completo se puede encontrar en el cuaderno de Jupyter adjunto \textit{P1.ipynb}, aquí se recogen 
+las conclusiones más relevantes obtenidas tras el EDA.
+
+% Hacemos una lista de conclusiones del EDA
+\begin{itemize}
+    \item El dataset contiene más de 6 millones de registros, lo que justifica el uso de Apache Spark para su procesamiento.
+    \item La variable objetivo (DEP\_DEL15) está desbalanceada, con aproximadamente un 20\% de vuelos retrasados.
+    \item Ninguna variable presenta valores nulos.
+    \item Distribución de la variable objetivo por mes y aerolínea en Figuras~\ref{fig:delays_by_month} y ~\ref{fig:delays_by_carrier}.
+    \item La variables meteorológicas (PRCP, SNOW, SNWD, TMAX, AWND) parecen tener una influencia 
+    significativa en los retrasos a la vista de la Tabla~\ref{tab:weather_stats}.
+
+\end{itemize}
+
+% Añadimos la tabla
+\begin{table}[h!]
+\centering
+\caption{Promedios de variables meteorológicas según si el vuelo tuvo retraso}
+\begin{tabular}{c|ccccc}
 \hline
-Heading level &  Example & Font size and style\\
+\textbf{Retraso} & \textbf{avg(PRCP)} & \textbf{avg(SNOW)} & \textbf{avg(SNWD)} & \textbf{avg(TMAX)} & \textbf{avg(AWND)} \\
 \hline
-Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
-1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
-2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
-3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
-4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
+1 & 0.1608 & 0.0645 & 0.1309 & 71.1289 & 8.7219 \\
+0 & 0.0904 & 0.0239 & 0.0823 & 71.5477 & 8.2526 \\
 \hline
 \end{tabular}
+\label{tab:weather_stats}
 \end{table}
 
+    
+% Añadimos las figuras
+\begin{figure}[h!]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/delays_by_month.png}
+        \caption{Distribución de vuelos retrasados por mes y semana (Gráfica hecha en PowerBI)}
+        \label{fig:delays_by_month}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/delays_by_carrier.png}
+        \caption{Distribución de vuelos retrasados por aerolínea}
+        \label{fig:delays_by_carrier}
+    \end{minipage}
+\end{figure}
 
-\noindent Displayed equations are centered and set on a separate
-line.
-\begin{equation}
-x + y = z
-\end{equation}
-Please try to avoid rasterized images for line-art diagrams and
-schemas. Whenever possible, use vector graphics instead (see
-Fig.~\ref{fig1}).
 
-% \begin{figure}
-% \includegraphics[width=\textwidth]{fig1.eps}
-% \caption{A figure caption is always placed below the illustration.
-% Please note that short captions are centered, while long ones are
-% justified by the macro package automatically.} \label{fig1}
-% \end{figure}
 
-\begin{theorem}
-This is a sample theorem. The run-in heading is set in bold, while
-the following text appears in italics. Definitions, lemmas,
-propositions, and corollaries are styled the same way.
-\end{theorem}
-%
-% the environments 'definition', 'lemma', 'proposition', 'corollary',
-% 'remark', and 'example' are defined in the LLNCS documentclass as well.
-%
-\begin{proof}
-Proofs, examples, and remarks have the initial word in italics,
-while the following text appears in normal font.
-\end{proof}
-For citations of references, we prefer the use of square brackets
-and consecutive numbers. Citations using labels or the author/year
-convention are also acceptable. The following bibliography provides
-a sample reference list with entries for journal
-articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
-book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
-and a homepage~\cite{ref_url1}. Multiple citations are grouped
-\cite{ref_article1,ref_lncs1,ref_book1},
-\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
+\section{Preprocesado de datos}
 
-\begin{credits}
-\subsubsection{\ackname} A bold run-in heading in small font size at the end of the paper is
-used for general acknowledgments, for example: This study was funded
-by X (grant number Y).
+En un primer lugar, se ha realizado un under-sampling del dataset para balancear la variable objetivo,
+reduciendo el número de registros con valor 0 en DEP\_DEL15 para igualarlo al número de registros con valor 1.
+De esta forma conseguimos equilibrar las clases y al mismo tiempo reducir el tamaño del dataset, lo que acelera el
+entrenamiento de los modelos.
 
-\subsubsection{\discintname}
-It is now necessary to declare any competing interests or to specifically
-state that the authors have no competing interests. Please place the
-statement with a bold run-in heading in small font size beneath the
-(optional) acknowledgments\footnote{If EquinOCS, our proceedings submission
-system, is used, then the disclaimer can be provided directly in the system.},
-for example: The authors have no competing interests to declare that are
-relevant to the content of this article. Or: Author A has received research
-grants from Company W. Author B has received a speaker honorarium from
-Company X and owns stock in Company Y. Author C is a member of committee Z.
-\end{credits}
+Se ha probado un preprocesado general inicial (StringIndexer, OneHotEncoder, VectorAssembler)
+pero durante la experimentación se han realizado ajustes específicos para cada modelo, que se explicarán más adelante.
+
+\section{Experimentación}
+
+La fase de experimentación fue muy extensa, probando diferentes combinaciones de características, modelos,
+métodos de muestreo y métricas de evaluación. A continuación se describen los aspectos más relevantes.
+
+En todos los casos se ha realizado un \textit{train-test split} del 80\%-20\% para evaluar los modelos.
+
+\subsection{Muestreo}
+
+Durante la experimentación se probaron diferentes técnicas de reducción de filas o subconjuntos de datos:
+\begin{itemize}
+    \item \textit{Under-sampling}: Como se ha mencionado anteriormente, se realizó un under-sampling para balancear la variable objetivo.
+    \item \textit{Stratified Sampling}: Se probó a realizar un muestreo estratificado para mantener la proporción original de clases en el conjunto de datos. 
+\end{itemize}
+
+\subsection{Selección de características}
+
+A lo largo de la experimentación se entrenaron modelos con diferentes subconjuntos de características. 
+Las selecciones consideradas son las siguientes:
+
+\begin{enumerate}
+    \item Todas las características.
+    \item Solo las características numéricas: De esta forma se elimina el coste computacional asociado a las variables categóricas, 
+    que se transforman en múltiples columnas tras aplicar el \textit{OneHotEncoder}.
+    \item Características meteorológicas y categóricas: Estas columnas parecen, según el análisis exploratorio, estar relacionadas con la variable objetivo.
+    \item Características definidas por un algoritmo de selección (UnivariateFeatureSelector).
+\end{enumerate}
+
+\subsection{Métricas de evaluación}
+Dado que se trata de un problema de clasificación binaria, se han utilizado las siguientes métricas para evaluar los modelos:
+\begin{itemize}
+    \item \textit{Accuracy}: Proporción de predicciones correctas sobre el total de predicciones.
+    \item \textit{Precision}: Proporción de verdaderos positivos sobre el total de positivos predichos.
+    \item \textit{Recall}: Proporción de verdaderos positivos sobre el total de positivos reales.
+    \item \textit{F1-Score}: Media armónica entre \textit{Precision} y \textit{Recall}, útil cuando las clases están desbalanceadas.
+\end{itemize}
+
+Según el conjunto de datos que se utilice (balanceado o desbalanceado) se dará más importancia a unas métricas u otras.
+
+\subsection{Modelos probados}
+\begin{itemize}
+    \item Regresión logística (Logistic Regression - LR)
+    \item Máquinas de vectores de soporte (Support Vector Machines - SVM)
+    \item Árboles de decisión (Decision Trees - DT)
+    \item Bosques aleatorios (Random Forest - RF)
+    \item Gradient Boosted Trees (GBT)
+    \item Redes neuronales (Multilayer Perceptron - MLP)
+    \item Naive Bayes (NB)
+\end{itemize}
+
+\section{Desarrollo de la experimentación}
+El desarrollo completo de la experimentación se encuentra en el cuaderno de Jupyter adjunto \textit{P1.ipynb}. Aquí se resumen los aspectos más relevantes y las conclusiones obtenidas en cada fase.
+
+Primero se probó con el dataset balanceado, entrenando los modelos LR, SVM, DT y RF con todas las características. Posteriormente, como los resultados no son satisfactorios, se incluye el modelo de Gradient Boosted Trees(GBT)~\cite{url_gbt}, que suele ofrecer buenos 
+resultados en problemas de clasificación binaria. Estos 5 modelos se entrenan con parámetros por defecto sobre los 4 subconjuntos de características definidos anteriormente. 
+
+El GBT, sobre todas las características o sobre meteorológicas+categóricas, resulta ser el mejor en términos de accuracy (64\%), métrica fiable al tratarse de un dataset balanceado.
+
+A continuación, ya que LR y SVM son sensibles a la escala se entrenan de nuevo aplicando RobustScaler, resistente a 
+outliers o distribuciones sesgadas (presentes en nuestro dataset)~\cite{url_robustscaler}.
+
+Los resultados siguen sin ser buenos por lo que se decide probar con el dataset desbalanceado, donde la métrica más relevante es el F1-Score.
+Se entrenan de nuevo los modelos GBT, LR, SVM, DT y RF, esta vez solamente sobre todas las características y sigue sin haber mejoras significativas. 
+El GBT es en este caso también el mejor modelo, con un F1-Score del 68\%.
+
+Es en este momento cuando se decide probar nuevos modelos: MLP y Naive Bayes. El MLP ofrece un F1-Score del 73.1\%, superando al GBT, mientras que el Naive Bayes
+no consigue mejorar los resultados anteriores.
+
+
+
+
+\section{Modelo final}
+
+\section{Conclusiones}
+
+
+
+
+
+
+
 %
 % ---- Bibliography ----
 %
@@ -212,29 +281,26 @@ Company X and owns stock in Company Y. Author C is a member of committee Z.
 % \bibliography{mybibliography}
 %
 \begin{thebibliography}{8}
+
 \bibitem{url_kaggle}
-Página de Kaggle del dataset, \url{https://www.kaggle.com/datasets/threnjen/2019-airline-delays-and-cancellations/data}, descargado a 08/10/2025
+Página de Kaggle del dataset, 
+\url{https://www.kaggle.com/datasets/threnjen/2019-airline-delays-and-cancellations/data}, 
+descargado el 08/10/2025.
 
 \bibitem{url_spark}
-Página sobre MLlib en la web de Spark, \url{https://spark.apache.org/mllib/}
+Página sobre MLlib en la web de Spark, 
+\url{https://spark.apache.org/mllib/}
 
-\bibitem{ref_article1}
-Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
+\bibitem{url_gbt}
+\textit{Comparison of 14 different families of classification algorithms on 115 binary datasets}. 
+arXiv preprint arXiv:1606.00930 (2016),
+\url{https://arxiv.org/abs/1606.00930}
 
-\bibitem{ref_lncs1}
-Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-Springer, Heidelberg (2016). \doi{10.10007/1234567890}
+\bibitem{url_robustscaler}
+Comparación de diferentes métodos de escalado,
+\url{https://machinelearningmastery.com/minmax-vs-standard-vs-robust-scaler-which-one-wins-for-skewed-data/}
 
-\bibitem{ref_book1}
-Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-Location (1999)
 
-\bibitem{ref_proc1}
-Author, A.-B.: Contribution title. In: 9th International Proceedings
-on Proceedings, pp. 1--2. Publisher, Location (2010)
-
-\bibitem{ref_url1}
-LNCS Homepage, \url{http://www.springer.com/lncs}, last accessed 2023/10/25
 \end{thebibliography}
+
 \end{document}
