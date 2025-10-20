@@ -126,11 +126,11 @@ acuerdo a métricas adecuadas al problema.
 
 \section{Análisis exploratorio de datos (EDA)}
 
-En esta sección se llevará a cabo un análisis exploratorio de los datos para comprender mejor las características
- del dataset y la relación entre las variables. Se utilizarán técnicas de visualización y estadísticas descriptivas 
+En esta sección se llevó a cabo un análisis exploratorio de los datos para comprender mejor las características
+ del dataset y la relación entre las variables. Se utilizaron técnicas de visualización y estadísticas descriptivas
  para identificar patrones, tendencias y posibles problemas en los datos.
 
-El análisis completo se puede encontrar en el cuaderno de Jupyter adjunto \textit{P1.ipynb}, aquí se recogen 
+El análisis completo se puede encontrar en el cuaderno de Jupyter adjunto \textit{p1_AndresLires_AngelVilarino.ipynb}, aquí se recogen 
 las conclusiones más relevantes obtenidas tras el EDA.
 
 % Hacemos una lista de conclusiones del EDA
@@ -187,7 +187,7 @@ reduciendo el número de registros con valor 0 en DEP\_DEL15 para igualarlo al n
 De esta forma conseguimos equilibrar las clases y al mismo tiempo reducir el tamaño del dataset, lo que acelera el
 entrenamiento de los modelos.
 
-Se ha probado un preprocesado general inicial (StringIndexer, OneHotEncoder, VectorAssembler)
+Se ha realizado un preprocesado general inicial (StringIndexer, OneHotEncoder, VectorAssembler)
 pero durante la experimentación se han realizado ajustes específicos para cada modelo, que se explicarán más adelante.
 
 \section{Experimentación}
@@ -215,7 +215,7 @@ Las selecciones consideradas son las siguientes:
     \item Solo las características numéricas: De esta forma se elimina el coste computacional asociado a las variables categóricas, 
     que se transforman en múltiples columnas tras aplicar el \textit{OneHotEncoder}.
     \item Características meteorológicas y categóricas: Estas columnas parecen, según el análisis exploratorio, estar relacionadas con la variable objetivo.
-    \item Características definidas por un algoritmo de selección (UnivariateFeatureSelector).
+    \item Características definidas por un algoritmo de selección (\textit{UnivariateFeatureSelector}).
 \end{enumerate}
 
 \subsection{Métricas de evaluación}
@@ -227,7 +227,10 @@ Dado que se trata de un problema de clasificación binaria, se han utilizado las
     \item \textit{F1-Score}: Media armónica entre \textit{Precision} y \textit{Recall}, útil cuando las clases están desbalanceadas.
 \end{itemize}
 
-Según el conjunto de datos que se utilice (balanceado o desbalanceado) se dará más importancia a unas métricas u otras.
+Según el conjunto de datos que se utilice en el entrenamiento concreto (balanceado o desbalanceado) se dará más 
+importancia a unas métricas u otras. En el caso del dataset desbalancado, no podemos fiarnos del \textit{Accuracy}
+(ya que un modelo que siempre prediga la clase mayoritaria obtendría un buen resultado),
+por lo que se dará más importancia al \textit{F1-Score}.
 
 \subsection{Modelos probados}
 \begin{itemize}
@@ -241,21 +244,31 @@ Según el conjunto de datos que se utilice (balanceado o desbalanceado) se dará
 \end{itemize}
 
 \section{Desarrollo de la experimentación}
-El desarrollo completo de la experimentación se encuentra en el cuaderno de Jupyter adjunto \textit{P1.ipynb}. Aquí se resumen los aspectos más relevantes y las conclusiones obtenidas en cada fase.
+El desarrollo completo de la experimentación se encuentra en el cuaderno de Jupyter adjunto \textit{p1_AndresLires_AngelVilarino.ipynb}. Aquí 
+se resumen los aspectos más relevantes y las conclusiones obtenidas en cada fase.
 
-Primero se probó con el dataset balanceado, entrenando los modelos LR, SVM, DT y RF con todas las características. Posteriormente, como los resultados no son satisfactorios, se incluye el modelo de Gradient Boosted Trees(GBT)~\cite{url_gbt}, que suele ofrecer buenos 
-resultados en problemas de clasificación binaria. Estos 5 modelos se entrenan con parámetros por defecto sobre los 4 subconjuntos de características definidos anteriormente. 
+Primero se prueba con el dataset balanceado, entrenando los modelos LR, SVM, DT y RF
+(modelos clásicos para clasificación binaria) con todas las características y sus hiperparámetros por defecto. 
+Posteriormente, como los resultados no son satisfactorios, se incluye el 
+modelo de Gradient Boosted Trees(GBT)~\cite{url_gbt}, técnica más novedosa, que suele ofrecer buenos 
+resultados en problemas de clasificación binaria. Estos 5 modelos se entrenan con parámetros 
+por defecto sobre los 4 subconjuntos de características definidos anteriormente. 
 
-El GBT, sobre todas las características o sobre meteorológicas+categóricas, resulta ser el mejor en términos de accuracy (64\%), métrica fiable al tratarse de un dataset balanceado.
+El GBT, sobre todas las características o sobre meteorológicas + categóricas, resulta 
+ser el mejor en términos de accuracy (64\%), métrica fiable al tratarse de un dataset balanceado.
 
-A continuación, ya que LR y SVM son sensibles a la escala se entrenan de nuevo aplicando RobustScaler, resistente a 
+A continuación, ya que LR y SVM son sensibles a la escala se prueban a entrenar de nuevo aplicando RobustScaler, resistente a 
 outliers o distribuciones sesgadas (presentes en nuestro dataset)~\cite{url_robustscaler}.
 
-Los resultados siguen sin ser buenos por lo que se decide probar con el dataset desbalanceado, donde la métrica más relevante es el F1-Score.
-Se entrenan de nuevo los modelos GBT, LR, SVM, DT y RF, esta vez solamente sobre todas las características y sigue sin haber mejoras significativas. 
+Los resultados siguen sin ser buenos por lo que se decide probar con un nuevo submuestreo, que mantiene 
+la distribución inicial del dataset desbalanceado\footnote{Por motivos de rendimiento este subconjunto es de menor tamaño 
+($\approx$ 1 millón de filas en total)}. En este caso, como se citó anteriormente, la métrica más relevante es el F1-Score.
+Se entrenan de nuevo los modelos GBT, LR, SVM, DT y RF, esta vez solamente sobre todas 
+las características y sigue sin haber mejoras significativas. 
 El GBT es en este caso también el mejor modelo, con un F1-Score del 68\%.
 
-Es en este momento cuando se decide probar nuevos modelos: MLP y Naive Bayes. El MLP ofrece un F1-Score del 73.1\%, superando al GBT, mientras que el Naive Bayes
+Es en este momento cuando se decide probar nuevos modelos: MLP y Naive Bayes. 
+El MLP ofrece un F1-Score del 73.1\%, superando al GBT, mientras que el Naive Bayes
 no consigue mejorar los resultados anteriores.
 
 
