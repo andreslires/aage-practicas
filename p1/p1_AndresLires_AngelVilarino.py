@@ -211,3 +211,55 @@ print(f'F1 del modelo MLP: {f1:.4f}')
 print(f'Precisión del modelo MLP: {precision:.4f}')
 print(f'Recall del modelo MLP: {recall:.4f}')
 
+# Búsqueda de hiperparámetros con Cross-Validation para el MLP
+
+# Aseguramos que el pipeline genera la columna 'features'
+train_transformed = pipeline_weighted_model.transform(train_data)
+test_transformed = pipeline_weighted_model.transform(test_data)
+
+# Obtenemos el número de características de entrada
+input_size = train_transformed.select("finalFeatures").first()[0].size
+print(f"Número de features de entrada: {input_size}")
+
+# Definimos el clasificador MLP
+mlp = MultilayerPerceptronClassifier(featuresCol='finalFeatures', labelCol='DEP_DEL15', seed=42)
+
+# Definimos una pequeña rejilla de hiperparámetros
+paramGrid = (ParamGridBuilder()
+             .addGrid(mlp.layers, [
+                 [input_size, 10, 2],
+                 [input_size, 15, 5, 2]
+             ])
+             .addGrid(mlp.maxIter, [50, 100])
+             .addGrid(mlp.stepSize, [0.03, 0.1])
+             .build())
+
+# Evaluador
+evaluator = MulticlassClassificationEvaluator(labelCol='DEP_DEL15',predictionCol='prediction',metricName='f1')
+
+# CrossValidator
+crossval = CrossValidator(estimator=mlp, estimatorParamMaps=paramGrid, evaluator=evaluator, numFolds=3, parallelism=3)
+
+# Entrenamos el modelo con cross-validation
+cv_model = crossval.fit(train_transformed)
+
+# Recuperamos el mejor modelo
+best_model = cv_model.bestModel
+print("=== Mejores hiperparámetros encontrados ===")
+print(f"Layers: {best_model.layers}")
+print(f"MaxIter: {best_model.getMaxIter()}")
+print(f"StepSize: {best_model.getStepSize()}")
+
+# Evaluamos el modelo en el conjunto de prueba
+predictions = cv_model.transform(test_transformed)
+
+metrics = {
+    "accuracy": "accuracy",
+    "precision": "weightedPrecision",
+    "recall": "weightedRecall",
+    "f1": "f1"
+}
+
+for name, metric in metrics.items():
+    value = evaluator.evaluate(predictions, {evaluator.metricName: metric})
+    print(f"{name.capitalize()} del modelo MLP con CV: {value:.4f}")
