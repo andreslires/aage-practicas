@@ -273,9 +273,38 @@ no consigue mejorar los resultados anteriores.
 
 
 \section{Modelo final}
+Tras toda la experimentación realizada, se ha decidido elegir como modelo final el
+Multilayer Perceptron (MLP) entrenado sobre el dataset desbalanceado con todas las variables, ya que fue el modelo que ofreció mejores resultados. 
+Por último, se ha realizado una búsqueda de hiperparámetros (\textit{grid search}) para optimizar el modelo,
+probando diferentes combinaciones de:
+\begin{itemize}
+    \item Número de capas ocultas: \verb|[input_size, 10, 2]| y \verb|[input_size, 15, 5, 2]|
+    \item Tasa de aprendizaje: \verb|[0.03, 0.1]|
+    \item Número máximo de iteraciones: \verb|[50, 100]|
+\end{itemize}
+El mejor modelo obtenido tras la búsqueda de hiperparámetros tiene la siguiente configuración:
+\begin{itemize}
+    \item Capas: \verb|[input_size, 15, 5, 2]|
+    \item Tasa de aprendizaje: 0.03
+    \item Número máximo de iteraciones: 100
+\end{itemize}
+
+Con este modelo final se obtienen los siguientes resultados en el conjunto de test:
+% Poner resultados todos en una fila de una tabla
+\begin{table}[h!]
+\centering
+\caption{Resultados del modelo final en el conjunto de test}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\hline
+0.8115 & 0.7652 & 0.8115 & 0.72980.7298 \\
+\hline
+\end{tabular}
+\end{table}
+    
 
 \section{Conclusiones}
-
 
 
 
