@@ -53,6 +53,8 @@ os.environ['JAVA_HOME'] = 'C:\Program Files\Eclipse Adoptium\jdk-17.0.16.8-hotsp
 
 ## Cómo ejecutar el proyecto
 
+### Paso previo: Descargar el [dataset](https://www.kaggle.com/code/ohadvilnai580/predicting-2019-flight-delays-knn-svm-analysis#Merging)
+
 ### Opción 1 — Desde terminal
 1. Coloca el archivo `full_data_flightdelay.csv` en la misma carpeta que el script `.py`.
 2. Abre una terminal en esa carpeta.
@@ -71,13 +73,13 @@ Esto lanzará Spark, cargará el dataset y comenzará el entrenamiento del model
 
 ## Resultados esperados
 
-El script imprimirá las métricas de rendimiento del modelo final en consola:
+El script imprimirá las métricas de rendimiento del modelo final en consola de la manera siguiente:
 
 | Modelo | Accuracy | Precisión | Recall | F1-score |
 |--------|-----------|-----------|---------|-----------|
 | MLP    | 0.85      | 0.80      | 0.75    | 0.77      |
 
-*(Los valores variarán según el tamaño del dataset y los parámetros elegidos).*
+*(Los valores mostrados son solo un ejemplo).*
 
 ---
 
