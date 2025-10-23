@@ -86,10 +86,10 @@ El script imprimirá las métricas de rendimiento del modelo final en consola de
 ## Estructura del proyecto
 
 ```
-Proyecto_RetrasosVuelos
+aage-practica1
 │
-├── p1_AndresLires_AngelVilarino.py     # Script principal
-├── full_data_flightdelay.csv            # Dataset original
-├── resultados/                         # Carpeta sugerida para guardar métricas o modelos
-└── README.md                           # Este archivo
-```
+├── p1_AndresLires_AngelVilarino.py           # Script principal
+├── full_data_flightdelay.csv                 # Dataset original
+├── p1_AndresLires_AngelVilarino.ipynb        # Notebook opcional
+├── p1_Memoria_AndresLires_AngelVilarino.pdf  # Memoria del proyecto
+└── README.md                                 # Este archivo

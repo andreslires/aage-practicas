@@ -271,6 +271,7 @@ Es en este momento cuando se decide probar nuevos modelos: MLP y Naive Bayes.
 El MLP ofrece un F1-Score del 73.1\%, superando al GBT, mientras que el Naive Bayes
 no consigue mejorar los resultados anteriores.
 
+\newpage
 
 \section{Modelo final}
 Tras toda la experimentación realizada, se ha decidido elegir como modelo final el
@@ -298,7 +299,7 @@ Con este modelo final se obtienen los siguientes resultados en el conjunto de te
 \hline
 \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
 \hline
-0.8115 & 0.7652 & 0.8115 & 0.72980.7298 \\
+0.8115 & 0.7652 & 0.8115 & 0.7298 \\
 \hline
 \end{tabular}
 \end{table}
@@ -306,10 +307,23 @@ Con este modelo final se obtienen los siguientes resultados en el conjunto de te
 
 \section{Conclusiones}
 
+En este proyecto se ha desarrollado un modelo de clasificación para predecir retrasos en 
+vuelos utilizando Apache Spark MLlib y un conjunto de datos de tamaño considerable. 
+Tras comparar diversos algoritmos y explorar diferentes técnicas de preprocesado o incluso 
+subconjuntos de datos para tratar de obtener un buen modelo predictivo,
+el Multilayer Perceptron (MLP) obtuvo el mejor rendimiento, 
+con una accuracy del 81% y un F1-Score de 0.73, demostrando una buena capacidad predictiva.
 
+El uso de Spark permitió manejar eficientemente grandes volúmenes de datos y aplicar diferentes 
+estrategias de muestreo y selección de características. Aun así, la naturaleza aleatoria de 
+los retrasos y el desbalanceo de clases suponen limitaciones relevantes.
 
+Como trabajo futuro, sería interesante probar a combinar diferentes conjuntos de datos.
+La exploración de modelos y técnicas ha sido bastante exhaustiva, pero podrían incorporarse
+nuevos datos que puedan complementar la información disponible, para tratar de modelizar mejor 
+la complejidad del problema.
 
-
+\newpage
 
 %
 % ---- Bibliography ----
