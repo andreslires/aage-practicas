@@ -16,9 +16,9 @@ from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 # Configuración de Spark con la ruta correcta
 
 # Ruta Andrés
-# os.environ['JAVA_HOME'] = 'C:\Program Files\Eclipse Adoptium\jdk-17.0.16.8-hotspot'
+os.environ['JAVA_HOME'] = 'C:\Program Files\Eclipse Adoptium\jdk-17.0.16.8-hotspot'
 # Ruta Vila
-os.environ['JAVA_HOME'] = '/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home'
+# os.environ['JAVA_HOME'] = '/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home'
 os.environ["PYSPARK_PYTHON"] = sys.executable
 os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
 
@@ -30,8 +30,9 @@ spark = SparkSession.builder \
 
 # Carga de datos y mostrado de las primeras filas
 
-df = spark.read.csv('full_data_flightdelay.csv', header=True, inferSchema=True)
+df = spark.read.csv('p1/full_data_flightdelay.csv', header=True, inferSchema=True)
 df.show(5)
+df.printSchema()
 
 # Reducimos el número de filas del dataset, manteniendo la proporción de vuelos con y sin retraso, usando stratified sampling
 
@@ -103,8 +104,8 @@ predictions = model_fitted.transform(test_weighted_scaled)
 
 accuracy = evaluator.evaluate(predictions, {evaluator.metricName: "accuracy"})
 f1 = evaluator.evaluate(predictions, {evaluator.metricName: "f1"})
-precision = evaluator.evaluate(predictions, {evaluator.metricName: "PrecisionByLabel"})
-recall = evaluator.evaluate(predictions, {evaluator.metricName: "RecallByLabel"})
+precision = evaluator.evaluate(predictions, {evaluator.metricName: "weightedPrecision"})
+recall = evaluator.evaluate(predictions, {evaluator.metricName: "weightedRecall "})
 
 print(f'Accuracy del modelo MLP: {accuracy:.4f}')
 print(f'F1 del modelo MLP: {f1:.4f}')
