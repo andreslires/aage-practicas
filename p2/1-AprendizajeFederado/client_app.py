@@ -17,6 +17,7 @@ def train(msg: Message, context: Context):
     """Train the model on local data."""
 
     # Load the model and initialize it with the received weights
+    # Edit: Modelo MLPSimple
     model = MLPSimple()
     model.load_state_dict(msg.content["arrays"].to_torch_state_dict())
     # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
