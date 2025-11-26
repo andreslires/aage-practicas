@@ -26,7 +26,7 @@ En primer lugar, se entrenará el modelo *Gaussian Naive Bayes* utilizando la li
 
 A continuación, se implementó el mismo modelo utilizando la librería `River`, que está diseñada para el aprendizaje continuo. El modelo fue entrenado de manera incremental, procesando una instancia a la vez y evaluando su precisión después de cada instancia. El modelo alcanzó una precisión final del 72.87%, ligeramente inferior al enfoque de *batch learning*, posiblemente debido a la naturaleza secuencial del aprendizaje continuo, como se puede observar en la Figura 1.
 
-![Comparación de precisión entre aprendizaje batch y streaming](p2/2-AprendizajeContinuo/graficas/comparacion_batch_streaming.png)
+![Comparación de precisión entre aprendizaje batch y streaming](2-AprendizajeContinuo/graficas/comparacion_batch_streaming.png)
 *Figura 1: Comparación de precisión entre aprendizaje batch y streaming*
 
 ## Manejo de *concept drift*
@@ -35,7 +35,7 @@ Para abordar el *concept drift*, se creó un detector de cambios utilizando el m
 
 En la Figura 2 se puede observar cómo el modelo maneja el *concept drift*, detectando 54 cambios a lo largo del flujo de datos y estabilizándose a lo largo del flujo, al contrario que el modelo anterior que presentaba más fluctuaciones en su precisión. El modelo con manejo de *concept drift* alcanzó una precisión final del 80.37%.
 
-![Accuracy con manejo de drift](p2/2-AprendizajeContinuo/graficas/accuracy_manejo_drift.png)
+![Accuracy con manejo de drift](2-AprendizajeContinuo/graficas/accuracy_manejo_drift.png)
 *Figura 2: Accuracy con manejo de drift (ADWIN)*
 
 ## Modelos adaptativos
