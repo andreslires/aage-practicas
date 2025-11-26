@@ -6,11 +6,6 @@ from flwr_datasets import FederatedDataset
 from flwr_datasets.partitioner import DirichletPartitioner
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, Normalize, ToTensor
-import matplotlib
-matplotlib.use("Agg")  
-import matplotlib.pyplot as plt 
-import os
-
 
 # Modelo base: MLP Simple
 class MLPSimple(nn.Module):
@@ -27,6 +22,24 @@ class MLPSimple(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+    
+class CNNModel(nn.Module):
+    """Simple CNN model for Fashion-MNIST."""
+    def __init__(self):
+        super(CNNModel, self).__init__()
+        self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
+        self.fc1 = nn.Linear(64 * 7 * 7, 128)
+        self.fc2 = nn.Linear(128, 10)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        x = self.pool(F.relu(self.conv2(x)))
+        x = x.view(-1, 64 * 7 * 7)  # Flatten the input
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
 
 fds = None  # Cache FederatedDataset
 
@@ -40,71 +53,6 @@ def apply_transforms(batch):
     """Apply transforms to the partition from FederatedDataset."""
     batch["image"] = [pytorch_transforms(img) for img in batch["image"]]
     return batch
-
-# Funcion para graficar histogramas
-def plot_histograma_cliente(labels, client_id):
-    """Guarda el histograma de clases para un cliente."""  
-    # Crear carpeta si no existe
-    os.makedirs("histogramas", exist_ok=True)
-
-    plt.figure(figsize=(5, 3))
-    plt.hist(labels, bins=range(11), align='left', rwidth=0.8)
-    plt.xticks(range(10))
-    plt.xlabel("Clase")
-    plt.ylabel("Frecuencia")
-    plt.title(f"Distribución de clases - Cliente {client_id}")
-    plt.tight_layout()
-
-    # Guardar imagen
-    filename = f"histogramas/cliente_{client_id}.png"
-    plt.savefig(filename)
-    plt.close()
-
-    print(f"Histograma guardado para el Cliente {client_id}")
-
-# Función para guardar todos los histogramas de clientes
-def plot_all_histograms(num_partitions):
-    """Plot histograms for all clients."""
-    global fds
-    partitioner = DirichletPartitioner(num_partitions=num_partitions, partition_by="label", alpha=0.1)
-    fds = FederatedDataset(
-        dataset="fashion_mnist",
-        partitioners={"train": partitioner},
-    )
-
-    for pid in range(num_partitions):
-        part = fds.load_partition(pid)
-        part.set_format("numpy")   
-        labels = [int(l) for l in part["label"]]
-        plot_histograma_cliente(labels, pid)
-
-# Función para graficar curvas de entrenamiento
-def plot_training_curves(metrics_history, save_path_prefix="metrics"):
-    """Plot training curves for loss and accuracy."""
-    os.makedirs("graficas", exist_ok=True)
-
-    rounds = [m["round"] for m in metrics_history]
-    losses = [m["loss"] for m in metrics_history]
-    accuracies = [m["accuracy"] for m in metrics_history]
-
-    plt.figure()
-    plt.plot(rounds, losses, marker="o")
-    plt.xlabel("Ronda")
-    plt.ylabel("Pérdida")
-    plt.title("Pérdida agregada por ronda")
-    plt.grid(True)
-    plt.savefig(f"graficas/{save_path_prefix}_loss.png")
-    plt.close()
-
-    plt.figure()
-    plt.plot(rounds, accuracies, marker="o")
-    plt.xlabel("Ronda")
-    plt.ylabel("Precisión")
-    plt.title("Precisión agregada por ronda")
-    plt.grid(True)
-    plt.savefig(f"graficas/{save_path_prefix}_accuracy.png")
-    plt.close()
-
 
 # Cargamos los datos y particionamos con Dritchlet alpha<=0.1
 def load_data(partition_id: int, num_partitions: int, batch_size: int):
