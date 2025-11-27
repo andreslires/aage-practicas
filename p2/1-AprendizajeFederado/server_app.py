@@ -33,8 +33,8 @@ def main(grid: Grid, context: Context) -> None:
     strategy_name: str = context.run_config["strategy"]
 
     # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
-    # global_model = CNNModel()
-    global_model = MLPSimple()
+    global_model = CNNModel()
+    # global_model = MLPSimple()
 
     arrays = ArrayRecord(global_model.state_dict())
 
@@ -86,8 +86,8 @@ def global_evaluate(server_round: int, arrays: ArrayRecord) -> MetricRecord:
 
     # Load the model and initialize it with the received weights
     # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
-    # model = CNNModel()
-    model = MLPSimple()
+    model = CNNModel()
+    # model = MLPSimple()
 
 
     model.load_state_dict(arrays.to_torch_state_dict())

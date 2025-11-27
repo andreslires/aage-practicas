@@ -19,8 +19,8 @@ def train(msg: Message, context: Context):
     # Load the model and initialize it with the received weights
     
     # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
-    # model = CNNModel()
-    model = MLPSimple()
+    model = CNNModel()
+    # model = MLPSimple()
 
     model.load_state_dict(msg.content["arrays"].to_torch_state_dict())
     # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -58,8 +58,10 @@ def evaluate(msg: Message, context: Context):
     """Evaluate the model on local data."""
 
     # Load the model and initialize it with the received weights
-    # IMPORTANTE: Cambiar para probar con CNN
-    model = MLPSimple()
+    # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
+    model = CNNModel()
+    # model = MLPSimple()
+    
     model.load_state_dict(msg.content["arrays"].to_torch_state_dict())
     device = torch.device("cpu")
     model.to(device)
