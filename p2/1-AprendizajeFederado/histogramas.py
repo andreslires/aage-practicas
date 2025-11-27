@@ -6,7 +6,7 @@ num_partitions = 10
 batch_size = 32
 num_classes = 10
 
-# Carpeta para guardar el gráfico
+# CARPETA PARA GUARDAR EL HISTOGRAMA
 os.makedirs("histogramas", exist_ok=True)
 
 # Matriz de frecuencias: filas = clases, columnas = clientes
@@ -15,7 +15,7 @@ frecuencias = []
 for pid in range(num_partitions):
     trainloader, _ = load_data(pid, num_partitions, batch_size)
     
-    # Contar etiquetas de cada cliente
+    # CONTAR ETIQUETAS DE CADA CLIENTE
     labels = []
     for batch in trainloader:
         labels.extend(batch["label"].tolist())
@@ -23,10 +23,10 @@ for pid in range(num_partitions):
     counts = [labels.count(c) for c in range(num_classes)]
     frecuencias.append(counts)
 
-# Transponer para que filas = clases, columnas = clientes
+# TRANSPOSEM LA MATRIZ PARA TENER FILAS = CLASES, COLUMNAS = CLIENTES
 frecuencias = list(zip(*frecuencias))
 
-# Crear gráfico de barras apiladas
+# CREAR GRÁFICO DE BARRAS APILADAS
 plt.figure(figsize=(10, 6))
 bottom = [0] * num_partitions
 for clase_idx, counts in enumerate(frecuencias):
@@ -40,7 +40,7 @@ plt.xticks(range(num_partitions), [f"Cliente {i}" for i in range(num_partitions)
 plt.legend(title="Clases")
 plt.tight_layout()
 
-# Guardar gráfico
+# GUARDAR GRÁFICO
 plt.savefig("histogramas/histograma.png")
 plt.close()
 print("Gráfico de barras apiladas guardado en 'histogramas/histograma.png'")
