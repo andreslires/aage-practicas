@@ -9,10 +9,16 @@ documentclass: article
 
 # Parte I: Aprendizaje Federado con Flower
 
-Esto es un ejemplo de texto. Solo para rellenar espacio y ver cómo queda el formato. Repite esto varias veces para simular un documento más largo. Esto es un ejemplo de texto. Solo para rellenar espacio y ver cómo queda el formato. Repite esto varias veces para simular un documento más largo. Esto es un ejemplo de texto. Solo para rellenar espacio y ver cómo queda el formato. Repite esto varias veces para simular un documento más largo. Esto es un ejemplo de texto. Solo para rellenar espacio y ver cómo queda
-el formato. Repite esto varias veces para simular un documento más largo.
+## Implementación
 
-Esto es un ejemplo de texto. Solo para rellenar espacio y ver cómo queda el formato. Repite esto varias veces para simular un documento más largo. Esto es un ejemplo de texto. Solo para rellenar espacio y ver cómo queda el formato. Repite esto varias veces para simular un documento más largo. Esto es un ejemplo de texto. Solo para rellenar espacio y ver cómo queda el formato. Repite esto varias veces para simular un documento más largo.
+## Experimentación
+
+## Preguntas de análisis
+
+### 1. Diferencias observadas entre los métodos. Explicar por qué aparecen.
+ 
+ 
+### 2. Analizar el impacto de hiperparámetros propios de FL: número de épocas locales, proporción de clientes seleccionados por ronda, etc.
 
 \newpage
 
@@ -49,13 +55,13 @@ El modelo HAT obtuvo una precisión final del **81.50%**, mientras que el modelo
 
 ## Preguntas de análisis
 
-1. **Justificar por qué un modelo adaptativo como HAT o ARF tiende a superar a GNB en presencia de cambios conceptuales.**
+### 1. **Justificar por qué un modelo adaptativo como HAT o ARF tiende a superar a GNB en presencia de cambios conceptuales.**
 
 Los modelos adaptativos como HAT o ARF superan a GNB en presencia de cambios conceptuales debido a que tienen enfoques distintos en su diseño. La principal diferencia es que GNB se entrena suponiendo estacionariedad en los datos, es decir, que la distribución de probabilidad P(X|Y) no cambia con el tiempo. Por lo tanto, cuando ocurre un cambio conceptual, no será capaz de detectarlo, por lo que su rendimiento se irá degradando a medida que los datos cambien.
 
 Por otro lado, los modelos adaptativos incorporan mecanismos de detección y adaptación que permiten darle más importancia a los datos recientes. En la pregunta siguiente se entrará en más detalles sobre como funcionan HAT y ARF, pero en resumen, ambos modelos pueden ajustar su estructura y parámetros en respuesta a los cambios en la distribución de los datos, lo que les permite mantener un rendimiento más alto en presencia de *concept drift*, como se puede apreciar en la Figura 3.
 
-2. **Explicar por qué ARF suele ser más robusto que HAT. Comentar el papel de los árboles adaptativos, las ventanas y la sustitución dinámica de modelos.**
+### 2. **Explicar por qué ARF suele ser más robusto que HAT. Comentar el papel de los árboles adaptativos, las ventanas y la sustitución dinámica de modelos.**
 
 ARF suele ser más robusto que HAT debido a que HAT es un solo árbol de decisión, mientras que ARF es un *ensemble* (*random forest*) compuesto por múltiples árboles adaptativos. HAT implementa detectores de *drift* como ADWIN a nivel de nodo del árbol, reemplazando subárboles cuando dejan de ser relevantes. Aunque esto le permite adaptarse a cambios locales en la distribución de los datos, sigue siendo vulnerable a cambios globales que afectan a toda la estructura del árbol.
 

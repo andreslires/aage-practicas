@@ -34,6 +34,7 @@ learning-rate = 0.01
 batch-size = 32
 strategy = "FedAvg"
 model = "MLPSimple"
+mu = 0.01
 
 [tool.flwr.federations]
 default = "local-simulation"

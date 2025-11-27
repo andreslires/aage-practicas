@@ -24,28 +24,28 @@ class MLPSimple(nn.Module):
         return x
     
 class CNNModel(nn.Module):
-    """Simple CNN model for Fashion-MNIST (corregida)."""
+    """Simple CNN model for Fashion-MNIST"""
     def __init__(self):
         super(CNNModel, self).__init__()
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
-        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)  # reduce 28x28 a 14x14
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)  # reducir 28x28 a 14x14
         self.fc1 = nn.Linear(64 * 14 * 14, 128)
         self.fc2 = nn.Linear(128, 10)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))
-        x = self.pool(x)  # ahora x tiene tamaño [batch, 64, 14, 14]
-        x = x.view(x.size(0), -1)  # aplanar correctamente
+        x = self.pool(x)  
+        x = x.view(x.size(0), -1)  
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
 
 fds = None  # Cache FederatedDataset
 
-# Normalización correcta para Fashion-MNIST
-# Estas son las estadísticas estándar del dataset Fashion-MNIST
+# NORMALIZACIÓN PARA FASHION-MNIST
+# ESTAS SON LAS ESTADÍSTICAS DE ESTE CONJUNTO DE DATOS
 FASHION_MNIST_MEAN = 0.2860
 FASHION_MNIST_STD = 0.3205
 pytorch_transforms = Compose([ToTensor(), Normalize((FASHION_MNIST_MEAN,), (FASHION_MNIST_STD,))])
@@ -55,13 +55,13 @@ def apply_transforms(batch):
     batch["image"] = [pytorch_transforms(img) for img in batch["image"]]
     return batch
 
-# Cargamos los datos y particionamos con Dritchlet alpha<=0.1
+# CARGAMOS LOS DATOS Y PARTICIONAMOS CON DIRICHLET (alpha=0.1)
 def load_data(partition_id: int, num_partitions: int, batch_size: int):
     """Load partition Fashion-MNIST data."""
     # Only initialize `FederatedDataset` once
     global fds
     if fds is None:
-        # Particionado basado en distribución Dirichlet con alpha<=0.1
+        # PARTICIONADO BASADO EN DISTRIBUCIÓN DIRICHLET CON ALPHA<=0.1
         partitioner = DirichletPartitioner(num_partitions=num_partitions, partition_by="label", alpha=0.1)
         fds = FederatedDataset(
             dataset="fashion_mnist",

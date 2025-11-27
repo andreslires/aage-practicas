@@ -4,6 +4,7 @@ import torch
 from flwr.app import ArrayRecord, Context, Message, MetricRecord, RecordDict
 from flwr.clientapp import ClientApp
 
+# IMPORTAR MODELOS
 from task import MLPSimple, load_data, CNNModel
 from task import test as test_fn
 from task import train as train_fn
