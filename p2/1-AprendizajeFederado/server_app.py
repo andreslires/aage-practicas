@@ -32,9 +32,17 @@ def main(grid: Grid, context: Context) -> None:
     # ESTRATEGIA DE ENTRENAMIENTO DEFINIDA EN pyproject.toml
     strategy_name: str = context.run_config["strategy"]
 
-    # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
-    global_model = CNNModel()
-    # global_model = MLPSimple()
+    # MODELO GLOBAL EN pyproject.toml
+    model_name = context.run_config["model"]
+
+    if model_name == "CNNModel":
+        print("Using model: CNNModel")
+        global_model = CNNModel()
+    elif model_name == "MLPSimple":
+        print("Using model: MLPSimple")
+        global_model = MLPSimple()
+    else:
+        raise ValueError(f"Unknown model: {model_name}")
 
     arrays = ArrayRecord(global_model.state_dict())
 
@@ -84,11 +92,15 @@ def main(grid: Grid, context: Context) -> None:
 def global_evaluate(server_round: int, arrays: ArrayRecord) -> MetricRecord:
     """Evaluate model on central data."""
 
-    # Load the model and initialize it with the received weights
-    # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
-    model = CNNModel()
-    # model = MLPSimple()
+    # SELECCIÓN DE MODELO SEGÚN SE HAYA DEFINIDO EN pyproject.toml
+    global model_name
 
+    if model_name == "CNNModel":
+        model = CNNModel()
+    elif model_name == "MLPSimple":
+        model = MLPSimple()
+    else:
+        raise ValueError(f"Unknown model: {model_name}")
 
     model.load_state_dict(arrays.to_torch_state_dict())
     device = torch.device("cpu")  # Usar CPU para consistencia
@@ -101,7 +113,7 @@ def global_evaluate(server_round: int, arrays: ArrayRecord) -> MetricRecord:
     test_loss, test_acc = test(model, test_dataloader, device)
 
     # GUARDAR METRICAS EN CSV
-    global metrics_file, nombre_estrategia, model_name
+    global metrics_file, nombre_estrategia
     with open(metrics_file, "a") as f:
         f.write(f"{server_round},{test_acc},{test_loss}\n")
 

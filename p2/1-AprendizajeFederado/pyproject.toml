@@ -33,6 +33,7 @@ min-available-clients = 10
 learning-rate = 0.01
 batch-size = 32
 strategy = "FedAvg"
+model = "MLPSimple"
 
 [tool.flwr.federations]
 default = "local-simulation"

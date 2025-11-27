@@ -16,11 +16,14 @@ app = ClientApp()
 def train(msg: Message, context: Context):
     """Train the model on local data."""
 
-    # Load the model and initialize it with the received weights
-    
-    # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
-    model = CNNModel()
-    # model = MLPSimple()
+    # SELECCIÓN DE MODELO SEGÚN SE HAYA DEFINIDO EN pyproject.toml
+    model_name = context.run_config["model"]
+    if model_name == "CNNModel":
+        model = CNNModel()
+    elif model_name == "MLPSimple":
+        model = MLPSimple()
+    else:
+        raise ValueError(f"Unknown model: {model_name}")
 
     model.load_state_dict(msg.content["arrays"].to_torch_state_dict())
     # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -57,10 +60,14 @@ def train(msg: Message, context: Context):
 def evaluate(msg: Message, context: Context):
     """Evaluate the model on local data."""
 
-    # Load the model and initialize it with the received weights
-    # CAMBIAR ENTRE MLP Y CNN SEGÚN SE QUIERA PROBAR
-    model = CNNModel()
-    # model = MLPSimple()
+    # SELECCIÓN DEL MODELO SEGÚN SE HAYA DEFINIDO EN pyproject.toml
+    model_name = context.run_config["model"]
+    if model_name == "CNNModel":
+        model = CNNModel()
+    elif model_name == "MLPSimple":
+        model = MLPSimple()
+    else:
+        raise ValueError(f"Unknown model: {model_name}")
     
     model.load_state_dict(msg.content["arrays"].to_torch_state_dict())
     device = torch.device("cpu")
