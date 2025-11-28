@@ -78,3 +78,29 @@ python histogramas.py
 ```
 
 ### Parte II: Aprendizaje Continuo con River
+
+La segunda parte de la práctica se desarrolla en el notebook:
+
+2-AprendizajeContinuo/2-AprendizajeContinuo.ipynb
+
+Este archivo contiene toda la experimentación relacionada con aprendizaje en *streaming*, detección de *concept drift* y modelos adaptativos. 
+Las dependencias para ejecutar el notebook se pueden instalar de dos formas en un entorno virtual:
+1. Usando pip:
+
+```bash
+pip install river scikit-learn matplotlib
+```
+
+2. Usando conda:
+
+```bash
+conda install -c conda-forge river scikit-learn matplotlib
+```
+
+Una vez instaladas, ejecutar el notebook es tan sencillo como abrirlo con *VS Code*, *Jupyter Notebook* o *Jupyter Lab* y ejecutar las celdas en orden. Alternativamente, se puede ejecutar todo el notebook desde la terminal con el siguiente comando:
+
+```bash
+jupyter notebook 2-AprendizajeContinuo/2-AprendizajeContinuo.ipynb
+```
+
+Por último, cabe destacar que las gráficas generadas durante la experimentación, para la comparación de modelos de aprendizaje continuo, serán guardadas en la carpeta `2-AprendizajeContinuo/graficas`.
