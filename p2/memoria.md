@@ -4,7 +4,7 @@ date: Curso 2025-2026
 author: "Grupo 2: Andrés Lires Saborido, Ángel Vilariño García"
 geometry: margin=3cm
 fontsize: 12pt
-documentclass: article
+papersize: a4
 ---
 
 # Parte I: Aprendizaje Federado con Flower
