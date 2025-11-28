@@ -55,9 +55,11 @@ Para esto, si se abre la terminal en la carpeta raíz de la práctica, se deber�
 cd 1-AprendizajeFederado
 ```
 
-A partir de aquí, se podrá ejecutar cualquiera de los experimentos definidos en los archivos `.toml` dentro de la carpeta `experiments`.
+Situados en este directorio, se podrá ejecutar por terminal cualquiera de los experimentos definidos. 
 
-Para ejecutar un experimento concreto, se utilizará el siguiente comando:
+Para tratar de facilitar la experimentación, se ha intentado buscar una manera de que la selección del modelo a utilizar, el método de agregación y los hiperparámetros no implique la modificación de los scripts principales (`server_app.py`, `client_app.py` y `task.py`). Para ello, se han optimizado los códigos para que se lean estos parámetros desde diferentes archivos `.toml`.
+
+Para ejecutar un experimento concreto de los definidos en la carpeta `experiments`, se utilizará el siguiente comando:
 
 ```bash
 flwr run . --run-config experiments/<nombre_experimento>.toml
@@ -97,10 +99,6 @@ pip install river scikit-learn matplotlib
 conda install -c conda-forge river scikit-learn matplotlib
 ```
 
-Una vez instaladas, ejecutar el notebook es tan sencillo como abrirlo con *VS Code*, *Jupyter Notebook* o *Jupyter Lab* y ejecutar las celdas en orden. Alternativamente, se puede ejecutar todo el notebook desde la terminal con el siguiente comando:
-
-```bash
-jupyter notebook 2-AprendizajeContinuo/2-AprendizajeContinuo.ipynb
-```
+Una vez instaladas, ejecutar el notebook es tan sencillo como abrirlo con *VS Code*, *Jupyter Notebook* o *Jupyter Lab* y ejecutar las celdas en orden. 
 
 Por último, cabe destacar que las gráficas generadas durante la experimentación, para la comparación de modelos de aprendizaje continuo, serán guardadas en la carpeta `2-AprendizajeContinuo/graficas`.

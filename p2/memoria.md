@@ -21,9 +21,11 @@ A partir de estos archivos se han realizado las siguientes modificaciones, por o
 
 3. Editado el particionado para utilizar un particionado basado en distribución Dirichlet con $\alpha \leq 0.1$ en la función `load_data` del archivo `task.py`.
 
-4. Creado un nuevo archivo `histogramas.py` para generar un histograma que muestre la distribución de clases en cada cliente. El histograma resultante se puede ver en la Figura 1. En la entrega se pueden encontrar histogramas individuales para cada cliente.
+4. Creado un nuevo archivo `histogramas.py` para generar un histograma que muestre la distribución de clases en cada cliente. 
 
-![Histograma de distribución de clases entre clientes](1-AprendizajeFederado/histogramas/histograma.png)
+    El histograma resultante se puede ver en la Figura 1. En la entrega se pueden encontrar histogramas individuales para cada cliente.
+
+    ![Histograma de distribución de clases entre clientes](1-AprendizajeFederado/histogramas/histograma.png)
 
 5. Construida una nueva clase `MLPSimple` en el archivo `task.py`, que define un modelo de red neuronal simple.
 
@@ -31,14 +33,14 @@ A partir de estos archivos se han realizado las siguientes modificaciones, por o
 
     - Para el caso de FedProx, se ha considerado un valor base de $\mu = 0.01$ y se ha adaptado el archivo `pyproject.toml` para despues poder experimentar con esta variable ([*Paper de referencia*](https://arxiv.org/abs/1812.06127)).
 
-7. Creada una nueva función `plot_metrics` en el archivo `metrics.py` para generar gráficas comparativas de las métricas obtenidas en las distintas experimentaciones.
+7. Creada una nueva función `plot_metrics` en el archivo `metrics.py` para generar gráficas comparativas de las métricas obtenidas en las distintas experimentaciones (que se habían almacenado en formato CSV en la carpeta `metrics`).
 
 A continuación, se ha procedido ha realizar las experimentaciones necesarias para responder a las preguntas de análisis propuestas.
 
-El apartado 2.4 ha requerido la creación de un nuevo modelo CNN, el cual se ha definido en el archivo `task.py` bajo la clase `CNNModel`. Se ha entrenado este modelo utilizando tanto FedAvg como FedProx, y se han recogido las métricas correspondientes para su posterior análisis.
+Por último, el apartado 2.4 ha requerido la creación de un nuevo modelo CNN, el cual se ha definido en el archivo `task.py` bajo la clase `CNNModel`. Se ha entrenado este modelo utilizando tanto FedAvg como FedProx, y se han recogido las métricas correspondientes para su posterior análisis.
 
-Tal y como se menciona en el README, se ha llevado a cabo un proceso importante de optimización de los códigos de manera que no sea necesario adaptar los scripts principales para cada experimento.
-Esto ha conllevado la creación de diferentes archivos .toml para gestionar la ejecución de los experimentos.
+Tal y como se menciona en el *README*, se ha llevado a cabo un proceso importante de optimización de los códigos de manera que no sea necesario adaptar los scripts principales para cada experimento.
+Esto ha conllevado la creación de diferentes archivos `.toml` para gestionar la ejecución de los experimentos.
 
 ## Experimentación
 
