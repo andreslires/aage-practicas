@@ -57,7 +57,7 @@ cd 1-AprendizajeFederado
 
 Situados en este directorio, se podrá ejecutar por terminal cualquiera de los experimentos definidos. 
 
-Para tratar de facilitar la experimentación, se ha intentado buscar una manera de que la selección del modelo a utilizar, el método de agregación y los hiperparámetros no implique la modificación de los scripts principales (`server_app.py`, `client_app.py` y `task.py`). Para ello, se han optimizado los códigos para que se lean estos parámetros desde diferentes archivos `.toml`.
+Para tratar de facilitar la experimentación, se ha intentado buscar una manera de que la selección del modelo a utilizar, el método de agregación y los hiperparámetros no implique la modificación de los scripts principales (`server_app.py`, `client_app.py` y `task.py`). Para ello, se han optimizado los códigos para que se lean estos parámetros desde diferentes archivos `.toml`. Se han incorporado condicionales y variables globales para que, en función del archivo `.toml` que se utilice al ejecutar el comando `flwr run .`, se seleccionen los parámetros deseados.
 
 Para ejecutar un experimento concreto de los definidos en la carpeta `experiments`, se utilizará el siguiente comando:
 
