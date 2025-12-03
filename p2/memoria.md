@@ -44,6 +44,15 @@ Esto ha conllevado la creación de diferentes archivos `.toml` para gestionar la
 
 ## Experimentación
 
+Los experimentos base realizados son los siguientes:
+- **Experimento 1:** Modelo MLPSimple con FedAvg y distribución Dirichlet $\alpha = 0.1$.
+- **Experimento 2:** Modelo MLPSimple con FedProx ($\mu = 0.01$) y distribución Dirichlet $\alpha = 0.1$.
+
+A continuación, se ha pasado a utilizar redes neuronales convolucionales (CNN). La red neuronal final utilizada se ha definido en la clase `CNNModel` del archivo `task.py`. Se han probado diferentes redes para llegar a esta arquitectura final, cambiando el número de capas convolucionales, añadiendo capas de *dropout* o de *batch normalization*.
+Finalmente se han realizado los siguientes experimentos con el modelo final:
+- **Experimento 3:** Modelo CNN con FedAvg y distribución Dirichlet $\alpha = 0.1$.
+- **Experimento 4:** Modelo CNN con FedProx ($\mu = 0.01$) y distribución Dirichlet $\alpha = 0.1$.
+
 ## Preguntas de análisis
 
 ### 1. Diferencias observadas entre los métodos. Explicar por qué aparecen.
