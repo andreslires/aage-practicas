@@ -12,7 +12,7 @@ from task import MLPSimple, load_centralized_dataset, test, CNNModel
 # Create ServerApp
 app = ServerApp()
 
-# VARIABLES GLOBALES PARA GUARDAR METRICAS
+# VARIABLES GLOBALES
 metrics_file = None
 nombre_estrategia = None
 model_name = None

@@ -23,7 +23,7 @@ for pid in range(num_partitions):
     counts = [labels.count(c) for c in range(num_classes)]
     frecuencias.append(counts)
 
-# TRANSPOSEM LA MATRIZ PARA TENER FILAS = CLASES, COLUMNAS = CLIENTES
+# TRANSPONER LA MATRIZ PARA TENER FILAS = CLASES, COLUMNAS = CLIENTES
 frecuencias = list(zip(*frecuencias))
 
 # CREAR GRÁFICO DE BARRAS APILADAS
