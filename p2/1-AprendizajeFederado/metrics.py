@@ -28,6 +28,7 @@ if __name__ == "__main__":
     metrics_FedProx_MLPSimple = pd.read_csv("metrics\\metrics_FedProx_MLPSimple.csv")
     metrics_FedAvg_CNNModel = pd.read_csv("metrics\\metrics_FedAvg_CNNModel.csv")
     metrics_FedProx_CNNModel = pd.read_csv("metrics\\metrics_FedProx_CNNModel.csv")
+    metrics_FedAvg_CNNModel_local_epochs_3 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_local-epochs_3.csv")
 
     # MLPSimple: FedAvg vs FedProx
     plot_metrics(
@@ -93,4 +94,24 @@ if __name__ == "__main__":
         ylabel="Loss",
         labels=["FedAvg MLPSimple", "FedProx MLPSimple", "FedAvg CNNModel", "FedProx CNNModel"],
         name_file="Loss_Comparacion_General"
+    )
+
+# COMPARAR FedAvg CNNModel con 1 y 3 épocas locales
+    plot_metrics(
+        dataframes=[metrics_FedAvg_CNNModel, metrics_FedAvg_CNNModel_local_epochs_3],
+        metric="accuracy",
+        title="Comparación de Accuracy: FedAvg CNNModel con 1 y 3 épocas locales",
+        xlabel="Rondas",
+        ylabel="Accuracy",
+        labels=["1 época local", "3 épocas locales"],
+        name_file="Accuracy_FedAvg_CNNModel_local_epochs"
+    )
+    plot_metrics(
+        dataframes=[metrics_FedAvg_CNNModel, metrics_FedAvg_CNNModel_local_epochs_3],
+        metric="loss",
+        title="Comparación de Loss: FedAvg CNNModel con 1 y 3 épocas locales",
+        xlabel="Rondas",
+        ylabel="Loss",
+        labels=["1 época local", "3 épocas locales"],
+        name_file="Loss_FedAvg_CNNModel_local_epochs"
     )

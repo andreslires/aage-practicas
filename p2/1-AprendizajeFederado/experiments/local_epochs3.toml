@@ -1,0 +1,3 @@
+strategy = "FedAvg"
+model = "CNNModel"
+local-epochs = 3
