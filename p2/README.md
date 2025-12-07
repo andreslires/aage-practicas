@@ -83,7 +83,7 @@ python histogramas.py
 
 La segunda parte de la práctica se desarrolla en el notebook:
 
-2-AprendizajeContinuo/2-AprendizajeContinuo.ipynb
+`2-AprendizajeContinuo/2-AprendizajeContinuo.ipynb`
 
 Este archivo contiene toda la experimentación relacionada con aprendizaje en *streaming*, detección de *concept drift* y modelos adaptativos. 
 Las dependencias para ejecutar el notebook se pueden instalar de dos formas en un entorno virtual:
