@@ -1,0 +1,3 @@
+strategy = "FedAvg"
+model = "CNNModel"
+fraction-train = 0.9

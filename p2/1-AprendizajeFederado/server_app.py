@@ -51,7 +51,7 @@ def main(grid: Grid, context: Context) -> None:
     os.makedirs("metrics", exist_ok=True)
     nombre_estrategia = strategy_name
 
-    metrics_file = f"metrics/metrics_{nombre_estrategia}_{model_name}_local-epochs_{context.run_config['local-epochs']}.csv"
+    metrics_file = f"metrics/metrics_{nombre_estrategia}_{model_name}_fraction-train_{context.run_config['fraction-train']}.csv"
     with open(metrics_file, "w") as f:
         f.write("round,accuracy,loss\n")
     print(f"Metricas guardadas en {metrics_file}")

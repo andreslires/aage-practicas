@@ -30,6 +30,8 @@ if __name__ == "__main__":
     metrics_FedProx_CNNModel = pd.read_csv("metrics\\metrics_FedProx_CNNModel.csv")
     metrics_FedAvg_CNNModel_local_epochs_3 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_local-epochs_3.csv")
     metrics_FedAvg_CNNModel_local_epochs_5 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_local-epochs_5.csv")
+    metrics_FedAvg_CNNModel_fraction_train_01 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_fraction-train_0.1.csv")
+    metrics_FedAvg_CNNModel_fraction_train_09 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_fraction-train_0.9.csv")
 
     # MLPSimple: FedAvg vs FedProx
     plot_metrics(
@@ -115,4 +117,24 @@ if __name__ == "__main__":
         ylabel="Loss",
         labels=["1 época local", "3 épocas locales", "5 épocas locales"],
         name_file="Loss_FedAvg_CNNModel_local_epochs"
+    )
+
+# Comparar FedAvg CNNModel con fraction train 0.1, 0.5 y 0.9
+    plot_metrics(
+        dataframes=[metrics_FedAvg_CNNModel, metrics_FedAvg_CNNModel_fraction_train_01, metrics_FedAvg_CNNModel_fraction_train_09],
+        metric="accuracy",
+        title="Comparación de Accuracy: FedAvg CNNModel con fraction train 0.1, 0.5 y 0.9",
+        xlabel="Rondas",
+        ylabel="Accuracy",
+        labels=["Fraction train 0.5", "Fraction train 0.1", "Fraction train 0.9"],
+        name_file="Accuracy_FedAvg_CNNModel_fraction_train"
+    )
+    plot_metrics(
+        dataframes=[metrics_FedAvg_CNNModel, metrics_FedAvg_CNNModel_fraction_train_01, metrics_FedAvg_CNNModel_fraction_train_09],
+        metric="loss",
+        title="Comparación de Loss: FedAvg CNNModel con fraction train 0.1, 0.5 y 0.9",
+        xlabel="Rondas",
+        ylabel="Loss",
+        labels=["Fraction train 0.5", "Fraction train 0.1", "Fraction train 0.9"],
+        name_file="Loss_FedAvg_CNNModel_fraction_train"
     )

@@ -35,23 +35,42 @@ A partir de estos archivos se han realizado las siguientes modificaciones, por o
 
 7. Creada una nueva función `plot_metrics` en el archivo `metrics.py` para generar gráficas comparativas de las métricas obtenidas en las distintas experimentaciones (que se habían almacenado en formato CSV en la carpeta `metrics`).
 
-A continuación, se ha procedido ha realizar las experimentaciones necesarias para responder a las preguntas de análisis propuestas.
+    A continuación, se han ejecutado los entrenamientos siguiendo ambas estrategias (FedAvg y FedProx).
 
-Por último, el apartado 2.4 ha requerido la creación de un nuevo modelo CNN, el cual se ha definido en el archivo `task.py` bajo la clase `CNNModel`. Se ha entrenado este modelo utilizando tanto FedAvg como FedProx, y se han recogido las métricas correspondientes para su posterior análisis.
+8. El apartado 2.4 ha requerido la creación de un nuevo modelo CNN, el cual se ha definido en el archivo `task.py` bajo la clase `CNNModel`. 
+
+    Se ha entrenado este modelo utilizando tanto FedAvg como FedProx, y se han recogido las métricas correspondientes para su posterior análisis.
+
+**Nota:**
 
 Tal y como se menciona en el *README*, se ha llevado a cabo un proceso importante de optimización de los códigos de manera que no sea necesario adaptar los scripts principales para cada experimento.
-Esto ha conllevado la creación de diferentes archivos `.toml` para gestionar la ejecución de los experimentos.
+    
+Esto ha conllevado la creación de diferentes archivos `.toml` para gestionar la ejecución de las dos estrategias de aprendizaje federado, así como, más adelante, para variar el modelo utilizado o los hiperparámetros propios del aprendizaje federado.
 
 ## Experimentación
 
 Los experimentos base realizados son los siguientes:
+
 - **Experimento 1:** Modelo MLPSimple con FedAvg y distribución Dirichlet $\alpha = 0.1$.
+
 - **Experimento 2:** Modelo MLPSimple con FedProx ($\mu = 0.01$) y distribución Dirichlet $\alpha = 0.1$.
 
 A continuación, se ha pasado a utilizar redes neuronales convolucionales (CNN). La red neuronal final utilizada se ha definido en la clase `CNNModel` del archivo `task.py`. Se han probado diferentes redes para llegar a esta arquitectura final, cambiando el número de capas convolucionales, añadiendo capas de *dropout* o de *batch normalization*.
 Finalmente se han realizado los siguientes experimentos con el modelo final:
+
 - **Experimento 3:** Modelo CNN con FedAvg y distribución Dirichlet $\alpha = 0.1$.
+
 - **Experimento 4:** Modelo CNN con FedProx ($\mu = 0.01$) y distribución Dirichlet $\alpha = 0.1$.
+
+Las gráficas comparativas de precisión y pérdida para los cuatro experimentos se pueden ver en las Figuras 2 y 3 respectivamente.
+
+![Comparativa de precisión entre los distintos experimentos](1-AprendizajeFederado/graficas/Accuracy_Comparacion_General.png)
+
+![Comparativa de pérdida entre los distintos experimentos](1-AprendizajeFederado/graficas/Loss_Comparacion_General.png)
+
+Para responder a las preguntas de análisis, se han realizado experimentos adicionales variando los hiperparámetros propios del aprendizaje federado. Estos experimentos adicionales se han gestionado mediante archivos `.toml` específicos para cada configuración. 
+
+Los resultados de estas experimentaciones adicionales se presentan en el apartado siguiente.
 
 ## Preguntas de análisis
 
@@ -61,6 +80,10 @@ Finalmente se han realizado los siguientes experimentos con el modelo final:
 
 En el aprendizaje federado, más allá de los que existen en el entrenamiento clásico, existen hiperparámetros específicos que influyen en el rendimiento del modelo. Entre ellos, podemos destacar el número de épocas locales, que determina cuántas veces cada cliente entrena su modelo local antes de enviar los parámetros al servidor o la proporción de clientes seleccionados por ronda.
 
+Para responder a esta pregunta, se ha decidido partir del Experimento 3 (CNN con FedAvg y distribución Dirichlet $\alpha = 0.1$) ya que fue el que obtuvo mejores resultados en la experimentación inicial. A partir de este experimento base, se han realizado las siguientes variaciones:
+
+- **local-epochs**: Se han probado valores de 1 (ejemplo base), 3 y 5.
+- **fraction-train**: Se han probado valores de 0.5 (ejemplo base), 0.1 y 0.9.
 
 
 \newpage
