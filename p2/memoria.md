@@ -59,6 +59,10 @@ Finalmente se han realizado los siguientes experimentos con el modelo final:
  
 ### 2. Analizar el impacto de hiperparámetros propios de FL: número de épocas locales, proporción de clientes seleccionados por ronda, etc.
 
+En el aprendizaje federado, más allá de los que existen en el entrenamiento clásico, existen hiperparámetros específicos que influyen en el rendimiento del modelo. Entre ellos, podemos destacar el número de épocas locales, que determina cuántas veces cada cliente entrena su modelo local antes de enviar los parámetros al servidor o la proporción de clientes seleccionados por ronda.
+
+
+
 \newpage
 
 # Parte II: Aprendizaje Continuo con River
