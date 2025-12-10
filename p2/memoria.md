@@ -87,7 +87,7 @@ En el aprendizaje federado, más allá de los que existen en el entrenamiento cl
 Para responder a esta pregunta, se ha decidido partir del Experimento 3 (CNN con FedAvg y distribución Dirichlet $\alpha = 0.1$) ya que fue el que obtuvo mejores resultados en la experimentación inicial. A partir de este experimento base, se han realizado las siguientes variaciones:
 
 - **local-epochs**: Se han probado valores de 1 (ejemplo base), 3 y 5.
-Como se puede observar en la Figura 4, aumentar el número de épocas locales mejora la precisión del modelo global llegando a obtener resultados mayores al 80%, ya que permite a los clientes ajustar mejor sus modelos a los datos locales antes de la agregación en el servidor. Sin embargo, esto también puede incrementar la divergencia entre los modelos locales si los datos son muy heterogéneos, lo que podría afectar negativamente la convergencia del modelo global en escenarios No-IID.
+Como se puede observar en la Figura 4, aumentar el número de épocas locales no mejora la precisión del modelo global. De hecho, entrenar más épocas locales puede llevar a un sobreajuste en los datos locales de cada cliente, lo que resulta en una menor capacidad de generalización cuando se combinan los modelos locales en el servidor. En este caso, el mejor rendimiento se obtiene con 1 época local, alcanzando una precisión cercana al 80%, mientras que con 3 y 5 épocas locales la precisión disminuye ligeramente, situándose alrededor del 75%.
 ![Comparativa de precisión variando local-epochs](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_local_epochs.png)
 
 - **fraction-train**: Se han probado valores de 0.5 (ejemplo base), 0.1 y 0.9.
