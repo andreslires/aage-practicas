@@ -21,7 +21,7 @@ A partir de estos archivos se han realizado las siguientes modificaciones, por o
 
 3. Editado el particionado para utilizar un particionado basado en distribución Dirichlet con $\alpha \leq 0.1$ en la función `load_data` del archivo `task.py`.
 
-4. Creado un nuevo archivo `histogramas.py` para generar un histograma que muestre la distribución de clases en cada cliente. 
+4. Creado un nuevo archivo `histogramas.py` para generar un histograma que muestre la distribución de clases en cada cliente.
 
     El histograma resultante se puede ver en la Figura 1. En la entrega se pueden encontrar histogramas individuales para cada cliente.
 
@@ -37,14 +37,14 @@ A partir de estos archivos se han realizado las siguientes modificaciones, por o
 
     A continuación, se han ejecutado los entrenamientos siguiendo ambas estrategias (FedAvg y FedProx).
 
-8. El apartado 2.4 ha requerido la creación de un nuevo modelo CNN, el cual se ha definido en el archivo `task.py` bajo la clase `CNNModel`. 
+8. El apartado 2.4 ha requerido la creación de un nuevo modelo CNN, el cual se ha definido en el archivo `task.py` bajo la clase `CNNModel`.
 
     Se ha entrenado este modelo utilizando tanto FedAvg como FedProx, y se han recogido las métricas correspondientes para su posterior análisis.
 
 **Nota:**
 
 Tal y como se menciona en el *README*, se ha llevado a cabo un proceso importante de optimización de los códigos de manera que no sea necesario adaptar los scripts principales para cada experimento.
-    
+
 Esto ha conllevado la creación de diferentes archivos `.toml` para gestionar la ejecución de las dos estrategias de aprendizaje federado, así como, más adelante, para variar el modelo utilizado o los hiperparámetros propios del aprendizaje federado.
 
 ## Experimentación
@@ -87,8 +87,12 @@ En el aprendizaje federado, más allá de los que existen en el entrenamiento cl
 Para responder a esta pregunta, se ha decidido partir del Experimento 3 (CNN con FedAvg y distribución Dirichlet $\alpha = 0.1$) ya que fue el que obtuvo mejores resultados en la experimentación inicial. A partir de este experimento base, se han realizado las siguientes variaciones:
 
 - **local-epochs**: Se han probado valores de 1 (ejemplo base), 3 y 5.
-- **fraction-train**: Se han probado valores de 0.5 (ejemplo base), 0.1 y 0.9.
+Como se puede observar en la Figura 4, aumentar el número de épocas locales mejora la precisión del modelo global llegando a obtener resultados mayores al 80%, ya que permite a los clientes ajustar mejor sus modelos a los datos locales antes de la agregación en el servidor. Sin embargo, esto también puede incrementar la divergencia entre los modelos locales si los datos son muy heterogéneos, lo que podría afectar negativamente la convergencia del modelo global en escenarios No-IID.
+![Comparativa de precisión variando local-epochs](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_local_epochs.png)
 
+- **fraction-train**: Se han probado valores de 0.5 (ejemplo base), 0.1 y 0.9.
+La Figura 5 muestra que seleccionar una fracción muy baja de clientes (0.1) por ronda puede llevar a una representación insuficiente de la diversidad de datos, afectando negativamente la precisión del modelo global (en torno a 50%). Por otro lado, seleccionar una fracción muy alta (0.9) puede mejorar la representatividad pero a costa de un mayor costo computacional y de comunicación, con una mejora significativa en la precisión (> 80%), obteniendo una prácticamente igual que usando 0.5.
+![Comparativa de precisión variando fraction-train](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_fraction_train.png)
 
 \newpage
 
