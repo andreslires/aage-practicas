@@ -62,7 +62,7 @@ Finalmente se han realizado los siguientes experimentos con el modelo final:
 
 - **Experimento 4:** Modelo CNN con FedProx ($\mu = 0.01$) y distribución Dirichlet $\alpha = 0.1$.
 
-Las gráficas comparativas de precisión y pérdida para los cuatro experimentos se pueden ver en las Figuras 2 y 3 respectivamente.
+Las gráficas comparativas de precisión y pérdida para los cuatro experimentos se pueden ver en las Figuras 2 y 3 respectivamente. El modelo que alcanza una mejor precisión es el Experimento 3 (CNN con FedAvg), alcanzando una precisión final del **83.69%**.
 
 ![Comparativa de precisión entre los distintos experimentos](1-AprendizajeFederado/graficas/Accuracy_Comparacion_General.png)
 
@@ -71,6 +71,8 @@ Las gráficas comparativas de precisión y pérdida para los cuatro experimentos
 Para responder a las preguntas de análisis, se han realizado experimentos adicionales variando los hiperparámetros propios del aprendizaje federado. Estos experimentos adicionales se han gestionado mediante archivos `.toml` específicos para cada configuración. 
 
 Los resultados de estas experimentaciones adicionales se presentan en el apartado siguiente.
+
+\newpage
 
 ## Preguntas de análisis
 
@@ -87,16 +89,42 @@ En el aprendizaje federado, más allá de los que existen en el entrenamiento cl
 Para responder a esta pregunta, se ha decidido partir del Experimento 3 (CNN con FedAvg y distribución Dirichlet $\alpha = 0.1$) ya que fue el que obtuvo mejores resultados en la experimentación inicial. A partir de este experimento base, se han realizado las siguientes variaciones:
 
 - **local-epochs**: Se han probado valores de 1 (ejemplo base), 3 y 5.
-Como se puede observar en la Figura 4, aumentar el número de épocas locales no mejora la precisión del modelo global. De hecho, entrenar más épocas locales puede llevar a un sobreajuste en los datos locales de cada cliente (algo observable en la figura del *loss*), lo que resulta en una menor capacidad de generalización cuando se combinan los modelos locales en el servidor. En este caso, el mejor rendimiento se obtiene con 1 época local, alcanzando una precisión cercana al 80%, mientras que con 3 y 5 épocas locales la precisión disminuye ligeramente, situándose alrededor del 75%.
+Como se puede observar en la Figura 4, aumentar el número de épocas locales no mejora la precisión del modelo global. De hecho, entrenar más épocas locales puede llevar a un sobreajuste en los datos locales de cada cliente (algo observable en la figura 5), lo que resulta en una menor capacidad de generalización cuando se combinan los modelos locales en el servidor. En este caso, el mejor rendimiento se obtiene con 1 época local, alcanzando una precisión cercana al 80%, mientras que con 3 y 5 épocas locales la precisión disminuye ligeramente, situándose alrededor del 75%.
 
 ![Comparativa de precisión variando local-epochs](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_local_epochs.png)
 
 ![Comparativa de pérdida variando local-epochs](1-AprendizajeFederado/graficas/Loss_FedAvg_CNNModel_local_epochs.png)
 
 - **fraction-train**: Se han probado valores de 0.5 (ejemplo base), 0.1 y 0.9.
-La Figura 5 muestra que seleccionar una fracción muy baja de clientes (0.1) por ronda puede llevar a una representación insuficiente de la diversidad de datos, afectando negativamente la precisión del modelo global (en torno a 50%). Por otro lado, seleccionar una fracción muy alta (0.9) puede mejorar la representatividad pero a costa de un mayor costo computacional y de comunicación, con una mejora significativa en la precisión (> 80%), obteniendo una prácticamente igual que usando 0.5.
+La Figura 6 muestra que seleccionar una fracción muy baja de clientes (0.1) por ronda puede llevar a una representación insuficiente de la diversidad de datos, afectando negativamente la precisión del modelo global (en torno a 50%). Por otro lado, seleccionar una fracción muy alta (0.9) puede mejorar la representatividad pero a costa de un mayor costo computacional y de comunicación, con una mejora significativa en la precisión (> 80%), obteniendo una prácticamente igual que usando 0.5.
 
 ![Comparativa de precisión variando fraction-train](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_fraction_train.png)
+
+
+# Extra: Red preentrenada
+
+Una vez finalizada toda la experimentación requerida para las preguntas de análisis, se ha decidido realizar el experimento adicional de utilizar una red preentrenada. 
+Concretamente, se ha recurrido a la red MobileNet_v3_small, ya que es una red ligera y eficiente, adecuada para dispositivos con recursos limitados, y disponible
+en la librería `torchvision.models`.
+
+Para utilizar esta red con el conjunto de datos Fashion-MNIST, ha sido necesario adaptar el archivo `task.py` para definir una nueva clase `MobileNet` que carga el modelo preentrenado y hace los siguientes ajustes:
+
+- Modifica la primera capa convolucional para aceptar imágenes de un solo canal (en lugar de tres canales RGB). Se ha cambiafo aquí también el parámetro `stride` a 1 para evitar errores de reducción de tamaño de imagen,ya que las imágenes de Fashion-MNIST son de 28x28 píxeles y la red está preentrnada para imagenes 224x224 píxeles.
+
+- Reemplaza la capa final para que tenga 10 salidas, correspondientes a las 10 clases del dataset Fashion-MNIST.
+
+Los resultados no han sido tan buenos como se esperaba, obteniéndose una precisión final del **64.58%** utilizando FedAvg con distribución Dirichlet $\alpha = 0.1$. Tal y como se puede observar en
+la figura 7, a partir de la ronda 5, la red comienza a sobreajustarse a los datos locales, de forma que a partir de esa ronda la precisión oscila entre el 60% y el 65%, sin mostrar una tendencia clara de mejora. 
+
+![Pérdida del modelo MobileNet preentrenado con FedAvg](1-AprendizajeFederado/graficas/Loss_FedAvg_MobileNet.png)
+
+Por falta de tiempo no se ha profundizado más en este experimento, pero sería interesante probar
+el método FedProx, ajustar los hiperparámetros del aprendizaje federado o incluso cambiar la estrategia de particionado de los datos entre clientes para intentar mejorar los resultados.
+
+## Nota
+
+En la entrega final se incluyen todas las gráficas generadas durante la experimentación, así comos los archivos `.csv` con las métricas obtenidas en cada experimento. No todas han sido incluidas en este documento pero están disponibles para su consulta en la carpeta `1-AprendizajeFederado/graficas` y `1-AprendizajeFederado/metrics` respectivamente.
+
 
 \newpage
 
@@ -108,7 +136,7 @@ En esta parte de la práctica, se trabajará con el dataset de *Electricity*, el
 
 En primer lugar, se entrenará el modelo ***Gaussian Naive Bayes*** utilizando la librería `scikit-learn` en un enfoque de *batch learning*. Pero antes, fue necesario convertir el dataset a un *array* de NumPy y dividir en conjunto de entrenamiento (70%) y de test (30%). La evaluación del modelo tuvo como resultado una precisión del **75.39%**.
 
-A continuación, se implementó el mismo modelo utilizando la librería `River`, que está diseñada para el aprendizaje continuo. El modelo fue entrenado de manera incremental, procesando una instancia a la vez y evaluando su precisión después de cada instancia. El modelo alcanzó una precisión final del **72.87%**, ligeramente inferior al enfoque de *batch learning*, posiblemente debido a la naturaleza secuencial del aprendizaje continuo, como se puede observar en la Figura xxx.
+A continuación, se implementó el mismo modelo utilizando la librería `River`, que está diseñada para el aprendizaje continuo. El modelo fue entrenado de manera incremental, procesando una instancia a la vez y evaluando su precisión después de cada instancia. El modelo alcanzó una precisión final del **72.87%**, ligeramente inferior al enfoque de *batch learning*, posiblemente debido a la naturaleza secuencial del aprendizaje continuo, como se puede observar en la Figura 8.
 
 ![Comparación de precisión entre aprendizaje batch y streaming](2-AprendizajeContinuo/graficas/comparacion_batch_streaming.png)
 
@@ -116,7 +144,7 @@ A continuación, se implementó el mismo modelo utilizando la librería `River`,
 
 Para abordar el *concept drift*, se creó un detector de cambios utilizando el **método ADWIN** (Adaptive Windowing). Este detector monitorea el rendimiento del modelo y ajusta su ventana de datos cuando detecta un cambio significativo en la distribución de los datos. A medida que van llegando los datos, se evalúa el rendimiento del modelo y si la predicción del dato actual es incorrecta, se actualiza el detector ADWIN con un valor de 1; si es correcta, se actualiza con un valor de 0. Cuando ADWIN detecta un cambio, se reinicia el modelo para adaptarse a la nueva distribución de datos.
 
-En la Figura xxx se puede observar cómo el modelo maneja el *concept drift*, detectando 54 cambios a lo largo del flujo de datos y estabilizándose a lo largo del flujo, al contrario que el modelo anterior que presentaba más fluctuaciones en su precisión. El modelo con manejo de *concept drift* alcanzó una precisión final del **80.37%**.
+En la Figura 9 se puede observar cómo el modelo maneja el *concept drift*, detectando 54 cambios a lo largo del flujo de datos y estabilizándose a lo largo del flujo, al contrario que el modelo anterior que presentaba más fluctuaciones en su precisión. El modelo con manejo de *concept drift* alcanzó una precisión final del **80.37%**.
 
 ![Accuracy con manejo de drift](2-AprendizajeContinuo/graficas/accuracy_manejo_drift.png)
 
@@ -124,7 +152,7 @@ En la Figura xxx se puede observar cómo el modelo maneja el *concept drift*, de
 
 Finalmente, se implementaron dos modelos adaptativos: un ***Hoeffding Adaptive Tree*** (HAT) y un ***Adaptive Random Forest*** (ARF). Ambos modelos están diseñados para adaptarse automáticamente a los cambios en la distribución de los datos sin necesidad de reiniciar el modelo manualmente. Los dos modelos fueron entrenados y evaluados de la misma manera que el modelo ***Gaussian Naive Bayes*** de *streaming*.
 
-El modelo HAT obtuvo una precisión final del **81.50%**, mientras que el modelo ARF alcanzó una precisión del **89.43%**. La Figura xxx muestra la comparación de precisión entre los tres modelos de aprendizaje continuo, destacando la superioridad del modelo ARF en este caso.
+El modelo HAT obtuvo una precisión final del **81.50%**, mientras que el modelo ARF alcanzó una precisión del **89.43%**. La Figura 10 muestra la comparación de precisión entre los tres modelos de aprendizaje continuo, destacando la superioridad del modelo ARF en este caso.
 
 ![Comparación de precisión entre modelos adaptativos](2-AprendizajeContinuo/graficas/comparacion_modelos_adaptativos.png)
 

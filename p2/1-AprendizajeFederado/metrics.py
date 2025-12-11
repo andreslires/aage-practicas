@@ -32,6 +32,7 @@ if __name__ == "__main__":
     metrics_FedAvg_CNNModel_local_epochs_5 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_local-epochs_5.csv")
     metrics_FedAvg_CNNModel_fraction_train_01 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_fraction-train_0.1.csv")
     metrics_FedAvg_CNNModel_fraction_train_09 = pd.read_csv("metrics\\metrics_FedAvg_CNNModel_fraction-train_0.9.csv")
+    metrics_MobileNet = pd.read_csv("metrics\\metrics_FedAvg_MobileNet.csv")
 
     # MLPSimple: FedAvg vs FedProx
     plot_metrics(
@@ -137,4 +138,25 @@ if __name__ == "__main__":
         ylabel="Loss",
         labels=["Fraction train 0.5", "Fraction train 0.1", "Fraction train 0.9"],
         name_file="Loss_FedAvg_CNNModel_fraction_train"
+    )
+
+    # Graficar  MobileNet
+    plot_metrics(
+        dataframes=[metrics_MobileNet],
+        metric="accuracy",
+        title="Accuracy: FedAvg MobileNet",
+        xlabel="Rondas",
+        ylabel="Accuracy",
+        labels=["FedAvg MobileNet"],
+        name_file="Accuracy_FedAvg_MobileNet"
+    )
+
+    plot_metrics(
+        dataframes=[metrics_MobileNet],
+        metric="loss",
+        title="Loss: FedAvg MobileNet",
+        xlabel="Rondas",
+        ylabel="Loss",
+        labels=["FedAvg MobileNet"],
+        name_file="Loss_FedAvg_MobileNet"
     )
