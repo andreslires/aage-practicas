@@ -101,7 +101,7 @@ La Figura 6 muestra que seleccionar una fracción muy baja de clientes (0.1) por
 ![Comparativa de precisión variando fraction-train](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_fraction_train.png)
 
 
-# Extra: Red preentrenada
+## Extra: Red preentrenada
 
 Una vez finalizada toda la experimentación requerida para las preguntas de análisis, se ha decidido realizar el experimento adicional de utilizar una red preentrenada. 
 Concretamente, se ha recurrido a la red `MobileNet_v3_small`, ya que es una red ligera y eficiente, adecuada para dispositivos con recursos limitados, y disponible
