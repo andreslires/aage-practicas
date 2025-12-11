@@ -104,12 +104,12 @@ La Figura 6 muestra que seleccionar una fracción muy baja de clientes (0.1) por
 # Extra: Red preentrenada
 
 Una vez finalizada toda la experimentación requerida para las preguntas de análisis, se ha decidido realizar el experimento adicional de utilizar una red preentrenada. 
-Concretamente, se ha recurrido a la red MobileNet_v3_small, ya que es una red ligera y eficiente, adecuada para dispositivos con recursos limitados, y disponible
+Concretamente, se ha recurrido a la red `MobileNet_v3_small`, ya que es una red ligera y eficiente, adecuada para dispositivos con recursos limitados, y disponible
 en la librería `torchvision.models`.
 
 Para utilizar esta red con el conjunto de datos Fashion-MNIST, ha sido necesario adaptar el archivo `task.py` para definir una nueva clase `MobileNet` que carga el modelo preentrenado y hace los siguientes ajustes:
 
-- Modifica la primera capa convolucional para aceptar imágenes de un solo canal (en lugar de tres canales RGB). Se ha cambiafo aquí también el parámetro `stride` a 1 para evitar errores de reducción de tamaño de imagen,ya que las imágenes de Fashion-MNIST son de 28x28 píxeles y la red está preentrnada para imagenes 224x224 píxeles.
+- Modifica la primera capa convolucional para aceptar imágenes de un solo canal (en lugar de tres canales RGB). Se ha cambiado aquí también el parámetro `stride` a 1 para evitar errores de reducción de tamaño de imagen, ya que las imágenes de Fashion-MNIST son de 28x28 píxeles y la red está preentrenada para imagenes 224x224 píxeles.
 
 - Reemplaza la capa final para que tenga 10 salidas, correspondientes a las 10 clases del dataset Fashion-MNIST.
 
@@ -123,7 +123,7 @@ el método FedProx, ajustar los hiperparámetros del aprendizaje federado o incl
 
 ## Nota
 
-En la entrega final se incluyen todas las gráficas generadas durante la experimentación, así comos los archivos `.csv` con las métricas obtenidas en cada experimento. No todas han sido incluidas en este documento pero están disponibles para su consulta en la carpeta `1-AprendizajeFederado/graficas` y `1-AprendizajeFederado/metrics` respectivamente.
+En la entrega final se incluyen todas las gráficas generadas durante la experimentación, así comos los archivos `.csv` con las métricas obtenidas. No todas han sido incluidas en este documento pero están disponibles para su consulta en las carpetas `1-AprendizajeFederado/graficas` y `1-AprendizajeFederado/metrics` respectivamente.
 
 
 \newpage
