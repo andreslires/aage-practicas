@@ -7,7 +7,7 @@ from flwr.serverapp import Grid, ServerApp
 from flwr.serverapp.strategy import FedAvg, FedProx
 
 # IMPORTAR MODELO Y FUNCIONES DE EVALUACIÓN
-from task import MLPSimple, load_centralized_dataset, test, CNNModel
+from task import MLPSimple, load_centralized_dataset, test, CNNModel, MobileNet
 
 # Create ServerApp
 app = ServerApp()
@@ -42,6 +42,9 @@ def main(grid: Grid, context: Context) -> None:
     elif model_name == "MLPSimple":
         print("Using model: MLPSimple")
         global_model = MLPSimple()
+    elif model_name == "MobileNet":
+        print("Using model: MobileNet")
+        global_model = MobileNet()
     else:
         raise ValueError(f"Unknown model: {model_name}")
 
@@ -103,6 +106,8 @@ def global_evaluate(server_round: int, arrays: ArrayRecord) -> MetricRecord:
         model = CNNModel()
     elif model_name == "MLPSimple":
         model = MLPSimple()
+    elif model_name == "MobileNet":
+        model = MobileNet()
     else:
         raise ValueError(f"Unknown model: {model_name}")
 

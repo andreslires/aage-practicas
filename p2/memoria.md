@@ -78,7 +78,7 @@ Los resultados de estas experimentaciones adicionales se presentan en el apartad
 
 Como se puede observar en las Figuras 2 y 3, FedAvg tiende a obtener mejores resultados en términos de precisión y pérdida en comparación con FedProx en los experimentos realizados, debido a la naturaleza de ambos métodos. FedAvg promedia los modelos locales sin restricciones adicionales, lo que permite una mayor flexibilidad en la actualización del modelo global, especialmente efectivo cuando los datos entre clientes son relativamente homogéneos o IID. En contraste, FedProx introduce un término de penalización ($\mu = 0.01$) que limita la desviación de los modelos locales respecto al modelo global, lo cual es útil en entornos con datos muy heterogéneos o No-IID para evitar divergencias.
 
-En este caso, al ser los datos más uniformes (aproximadamente 3 o 4 clases de 10 por cliente) o al configurarse un $\mu$ demasiado restrictivo, se ha limitado la capacidad de los modelos locales para adaptarse a sus datos específicos, resultando en un rendimiento ligeramente inferior tanto en MLP y CNN.
+En este caso, al ser los datos más uniformes (aproximadamente 3 o 4 clases de 10 por cliente) o al configurarse un $\mu$ demasiado restrictivo, se ha limitado la capacidad de los modelos locales para adaptarse a sus datos específicos, resultando en un rendimiento ligeramente inferior del método FedProx tanto en MLP y CNN.
 
 ### 2. Analizar el impacto de hiperparámetros propios de FL: número de épocas locales, proporción de clientes seleccionados por ronda, etc.
 
@@ -87,11 +87,15 @@ En el aprendizaje federado, más allá de los que existen en el entrenamiento cl
 Para responder a esta pregunta, se ha decidido partir del Experimento 3 (CNN con FedAvg y distribución Dirichlet $\alpha = 0.1$) ya que fue el que obtuvo mejores resultados en la experimentación inicial. A partir de este experimento base, se han realizado las siguientes variaciones:
 
 - **local-epochs**: Se han probado valores de 1 (ejemplo base), 3 y 5.
-Como se puede observar en la Figura 4, aumentar el número de épocas locales no mejora la precisión del modelo global. De hecho, entrenar más épocas locales puede llevar a un sobreajuste en los datos locales de cada cliente, lo que resulta en una menor capacidad de generalización cuando se combinan los modelos locales en el servidor. En este caso, el mejor rendimiento se obtiene con 1 época local, alcanzando una precisión cercana al 80%, mientras que con 3 y 5 épocas locales la precisión disminuye ligeramente, situándose alrededor del 75%.
+Como se puede observar en la Figura 4, aumentar el número de épocas locales no mejora la precisión del modelo global. De hecho, entrenar más épocas locales puede llevar a un sobreajuste en los datos locales de cada cliente (algo observable en la figura del *loss*), lo que resulta en una menor capacidad de generalización cuando se combinan los modelos locales en el servidor. En este caso, el mejor rendimiento se obtiene con 1 época local, alcanzando una precisión cercana al 80%, mientras que con 3 y 5 épocas locales la precisión disminuye ligeramente, situándose alrededor del 75%.
+
 ![Comparativa de precisión variando local-epochs](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_local_epochs.png)
+
+![Comparativa de pérdida variando local-epochs](1-AprendizajeFederado/graficas/Loss_FedAvg_CNNModel_local_epochs.png)
 
 - **fraction-train**: Se han probado valores de 0.5 (ejemplo base), 0.1 y 0.9.
 La Figura 5 muestra que seleccionar una fracción muy baja de clientes (0.1) por ronda puede llevar a una representación insuficiente de la diversidad de datos, afectando negativamente la precisión del modelo global (en torno a 50%). Por otro lado, seleccionar una fracción muy alta (0.9) puede mejorar la representatividad pero a costa de un mayor costo computacional y de comunicación, con una mejora significativa en la precisión (> 80%), obteniendo una prácticamente igual que usando 0.5.
+
 ![Comparativa de precisión variando fraction-train](1-AprendizajeFederado/graficas/Accuracy_FedAvg_CNNModel_fraction_train.png)
 
 \newpage

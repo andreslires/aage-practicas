@@ -7,6 +7,8 @@ from flwr_datasets.partitioner import DirichletPartitioner
 from torch.utils.data import DataLoader
 from torchvision.transforms import Compose, Normalize, ToTensor
 
+from torchvision.models import mobilenet_v3_small, MobileNet_V3_Small_Weights
+
 # Modelo base: MLP Simple
 class MLPSimple(nn.Module):
     """Simple MLP model for Fashion-MNIST."""
@@ -58,6 +60,30 @@ class CNNModel(nn.Module):
         x = self.fc2(x)
 
         return x
+
+class MobileNet(nn.Module):
+    """MobileNetV2 model for Fashion-MNIST"""
+    def __init__(self):
+        super(MobileNet, self).__init__()
+        # Load pre-trained MobileNetV3 small model
+        self.mobilenet = mobilenet_v3_small(weights=MobileNet_V3_Small_Weights.IMAGENET1K_V1)
+
+        self.mobilenet.features[0][0] = nn.Conv2d(
+                    1,
+                    self.mobilenet.features[0][0].out_channels,
+                    kernel_size=self.mobilenet.features[0][0].kernel_size,
+                    stride=1,
+                    padding=self.mobilenet.features[0][0].padding,
+                    bias=False,
+                )
+  
+        # Modify the classifier to output 10 classes
+        self.mobilenet.classifier[-1] = nn.Linear(self.mobilenet.classifier[-1].in_features, 10)
+
+    def forward(self, x):
+        x = self.mobilenet(x)
+        return x
+
 
 fds = None  # Cache FederatedDataset
 
